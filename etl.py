@@ -14,4 +14,19 @@ def generate_data() -> pd.DataFrame:
 
 @task(name='transform data')
 def transform_data(data: pd.DataFrame) -> pd.DataFrame:
-    return
+    df.Ones = df.Ones.map(lambda x: np.sin(x))
+    df.Twos = df.Twos.map(lambda x: np.cos(x))
+    return df
+
+# @task(name='save to lfs')
+# def save_data(df: pd.DataFrame) -> None:
+#     df.to_csv()
+
+@flow(name='main flow')
+def main_flow():
+    df = generate_data()
+    transormed_df = transform_data(df)
+    
+if __name__ == "__main__":
+    main_flow()
+        
