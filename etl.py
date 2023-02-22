@@ -1,32 +1,26 @@
-# type: ignore
 import pandas as pd
-import numpy as np
 from prefect import task, flow
 
 @task(name='generate data')
-def generate_data() -> pd.DataFrame:
-    data  = {
-        'Ones': np.linspace(0, 100, 1),
-        'Twos': np.linspace(0, 200, 2),
-        'Threes': np.linspace(0, 300, 3),
+def create_data() -> pd.DataFrame:
+    data = {
+        'A': [i for i in range(0, 10, 1)],
+        'B': [i for i in range(0, 20, 2)],
+        'C': [i for i in range(0, 30, 3)]
     }
     return pd.DataFrame(data)
 
-@task(name='transform data')
-def transform_data(data: pd.DataFrame) -> pd.DataFrame:
-    df.Ones = df.Ones.map(lambda x: np.sin(x))
-    df.Twos = df.Twos.map(lambda x: np.cos(x))
+@task(name='transform')
+def transform(df: pd.DataFrame) -> pd.DataFrame:
+    df.A = df.A.map(lambda a: a + 1) 
+    df.B = df.B.map(lambda b: b + 2)
+    df.C = df.C.map(lambda c: c + 3)
     return df
 
-# @task(name='save to lfs')
-# def save_data(df: pd.DataFrame) -> None:
-#     df.to_csv()
-
 @flow(name='main flow')
-def main_flow():
-    df = generate_data()
-    transormed_df = transform_data(df)
+def my_flow():
+    df = create_data()
+    transformed_df = transform(df)
     
 if __name__ == "__main__":
-    main_flow()
-        
+    my_flow()
